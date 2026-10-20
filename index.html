@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Packlight</title>
+<meta name="description" content="Zip a folder and leave out the junk: venv, node_modules, .git and anything else you pick. Runs on your device, works offline.">
+<meta name="theme-color" content="#f3f5f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<main>
+  <header class="top">
+    <img src="icon-192.png" alt="" width="44" height="44">
+    <div>
+      <h1>Packlight</h1>
+      <p class="sub">Zip a folder and leave out the junk.</p>
+    </div>
+    <button id="reset" class="reset" type="button" hidden>Reset</button>
+  </header>
+  <p id="no-js" class="error">The app didn’t load. Open it from its web address (or http://localhost), not by double-clicking the file.</p>
+
+  <fieldset id="controls">
+    <section aria-labelledby="h-folder">
+      <h2 id="h-folder">Folder</h2>
+      <button id="pick" class="drop" type="button">
+        <span class="drop-title" id="folder-name">Choose a folder</span>
+        <span class="drop-hint" id="drop-hint">or drop one here</span>
+      </button>
+      <input id="dir-input" type="file" webkitdirectory hidden>
+      <p class="hint" id="pick-hint" hidden>Your browser may ask to “upload” the files. Nothing leaves your device.</p>
+      <p class="error" id="pick-note" hidden></p>
+    </section>
+
+    <section aria-labelledby="h-exclude">
+      <h2 id="h-exclude">Leave out</h2>
+      <div class="combo" id="combo">
+        <form id="add-form" class="add">
+          <label for="pattern" class="sr">Pattern to leave out</label>
+          <input id="pattern" type="search" placeholder="Search, or type a pattern like *.log" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="200">
+          <button type="submit">Add</button>
+        </form>
+        <div id="suggest" class="suggest" hidden></div>
+      </div>
+      <p id="pattern-error" class="error" hidden></p>
+      <ul id="chips" class="chips" aria-label="Left out"></ul>
+      <label class="toggle"><input id="use-gitignore" type="checkbox" checked> <span>Also use the folder’s own .gitignore files <span id="gi-count" class="muted"></span></span></label>
+    </section>
+  </fieldset>
+
+  <section class="result" aria-label="Result">
+    <p id="summary" class="summary">Choose a folder to see what goes into the ZIP.</p>
+    <details id="skipped-box" hidden><summary id="skipped-sum"></summary><ul id="skipped" class="paths"></ul></details>
+    <p id="block" class="error" hidden></p>
+    <div id="name-row" class="name-row" hidden>
+      <label for="zip-name">Save as</label>
+      <span class="name-field"><input id="zip-name" type="text" maxlength="100" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"><span class="muted">.zip</span></span>
+    </div>
+    <button id="compress" class="primary" type="button" disabled>Compress</button>
+    <div id="busy" class="busy" hidden>
+      <progress id="progress" max="1" value="0"></progress>
+      <div class="busy-row"><span id="progress-text" class="muted"></span><button id="cancel" type="button">Cancel</button></div>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <div id="saved" class="saved" hidden>
+      <a id="save-link" class="primary" download>Save ZIP</a>
+      <button id="share" type="button" hidden>Share…</button>
+    </div>
+    <div id="unreadable" class="warn" hidden><p id="unreadable-sum"></p><ul id="unreadable-list" class="paths"></ul></div>
+  </section>
+
+  <footer>
+    <p>Everything happens on your device. Nothing is uploaded and nothing is stored.</p>
+    <p>To install: use your browser menu’s <i>Install app</i>, or on iPhone tap Share, then <i>Add to Home Screen</i>.</p>
+  </footer>
+</main>
+</body>
+</html>
